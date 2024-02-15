@@ -1,0 +1,154 @@
+CREATE DATABASE empresahuascar
+USE empresahuascar
+
+CREATE TABLE IF NOT EXISTS rol_usuarios (
+	idRol INT PRIMARY KEY AUTO_INCREMENT,
+	tipoRol VARCHAR(10)
+)
+-- Crear el rol "administrador"
+INSERT INTO rol_usuarios (tipoRol) VALUES ('administrador');
+
+-- Crear el rol "trabajador"
+INSERT INTO rol_usuarios (tipoRol) VALUES ('trabajador');
+
+CREATE TABLE IF NOT EXISTS usuario (
+	id INT primary KEY AUTO_INCREMENT,
+	nombre VARCHAR(50),
+	apellido VARCHAR(60),
+	dni VARCHAR(8),
+	telefono VARCHAR(9),
+	genero VARCHAR(20),
+	fechaNacimiento DATE,
+	contraseña VARCHAR(12),
+	idRol INT,
+	FOREIGN KEY (idRol) REFERENCES rol_usuarios(idRol)
+)
+
+INSERT INTO usuario (nombre, apellido, dni, telefono, fechaNacimiento, contraseña, idRol)
+VALUES ('Vanessa', 'Choque', '12345678', '987654321', '1990-01-01', '1234', 1);
+
+
+SELECT * FROM rol_usuarios 
+
+CREATE TABLE IF NOT EXISTS tiposvehiculos (
+    idTipoVehiculo INT PRIMARY KEY AUTO_INCREMENT,
+    tipo VARCHAR(50),
+    cargaMin DOUBLE(7,2),
+    cargaMax DOUBLE(7,2),
+    precio DOUBLE(7,2)
+);
+
+INSERT INTO tiposvehiculos (tipo, cargaMin, cargaMax, precio) VALUES
+    ('Camión 4TM', 4000.00, 6500.00, 60.00),
+    ('Camión 8TM', 6501.00, 10000.00, 80.00),
+    ('Doble/Triple eje', 15000, 16500.00, 100),
+    ('Semitrailer',16501.00, 17500.00, 130.00),
+    ('Carreta', 17501.00, 19000.00, 150.00)
+
+CREATE TABLE IF NOT EXISTS Factura (
+  idFactura INT PRIMARY KEY AUTO_INCREMENT,
+  numeroFactura VARCHAR(20) NOT NULL,
+  fechaEmision DATE NOT NULL,
+  fechaVencimiento DATE,
+  tipoDocumentoIdentidadCliente VARCHAR(10) NOT NULL,
+  numeroDocumentoIdentidadCliente VARCHAR(15) NOT NULL,
+  nombreRazonSocialCliente VARCHAR(100) NOT NULL,
+  direccionCliente VARCHAR(255),
+  descripcionBienesServicios TEXT NOT NULL,
+  cantidad INT NOT NULL,
+  precioUnitario DECIMAL(10, 2) NOT NULL,
+  subtotal DECIMAL(10, 2) NOT NULL,
+  igv DECIMAL(10, 2) NOT NULL,
+  total DECIMAL(10, 2) NOT NULL,
+  moneda VARCHAR(3) NOT NULL,
+  datosEmisor VARCHAR(255) NOT NULL,
+  datosCliente VARCHAR(255) NOT NULL,
+  condicionesPago VARCHAR(50),
+  codigoProductoServicio VARCHAR(20)
+);
+
+-- insett
+INSERT INTO Factura (
+    numeroFactura, 
+    fechaEmision, 
+    fechaVencimiento, 
+    tipoDocumentoIdentidadCliente, 
+    numeroDocumentoIdentidadCliente, 
+    nombreRazonSocialCliente, 
+    direccionCliente, 
+    descripcionBienesServicios, 
+    cantidad, 
+    precioUnitario, 
+    subtotal, 
+    igv, 
+    total, 
+    moneda, 
+    datosEmisor, 
+    datosCliente, 
+    condicionesPago, 
+    codigoProductoServicio
+)
+VALUES (
+    'F2023001', -- Número de factura ficticio
+    '2023-12-14', -- Fecha de emisión ficticia
+    '2024-01-14', -- Fecha de vencimiento ficticia
+    'RUC', -- Tipo de documento de identidad del cliente
+    '123456789', -- Número de documento de identidad del cliente
+    'Cliente XYZ', -- Nombre o razón social del cliente
+    'Dirección del Cliente XYZ', -- Dirección del cliente
+    'Venta de Vehículos', -- Descripción de bienes/servicios
+    5, -- Cantidad de vehículos
+    20000.00, -- Precio unitario ficticio
+    100000.00, -- Subtotal ficticio
+    18000.00, -- IGV ficticio (18% del subtotal)
+    118000.00, -- Total ficticio
+    'USD', -- Moneda ficticia
+    'Datos del Emisor XYZ', -- Datos del emisor ficticio
+    'Datos del Cliente XYZ', -- Datos del cliente ficticio
+    'Pago en 30 días', -- Condiciones de pago ficticias
+    'VEH001' -- Código de producto/servicio ficticio
+);
+
+
+CREATE TABLE IF NOT EXISTS registroVehiculo (
+  idRegistro INT PRIMARY KEY AUTO_INCREMENT,
+  placa VARCHAR(7),
+  fechaRegistro DATE,
+  horaRegistro TIME,
+  precio DOUBLE(8,2),
+  cargaUtil DOUBLE(8,2),
+  idUsuario INT,
+  idTipoVehiculo INT,
+  FOREIGN KEY (idUsuario) REFERENCES usuario(id),
+  FOREIGN KEY (idTipoVehiculo) REFERENCES tiposvehiculos(idTipoVehiculo)
+);
+
+-- ALTER TABLE registroVehiculo
+-- ADD COLUMN precio DOUBLE(7,2)
+SELECT * FROM registrovehiculo
+SELECT * FROM tiposvehiculos
+SELECT * FROM usuario
+
+
+-- Registro 1
+INSERT INTO registroVehiculo (placa, fechaRegistro, horaRegistro, precio,cargaUtil, idUsuario, idTipoVehiculo)
+VALUES ('ABC123', '2023-12-14', '12:30:00', 15000.00, 16450,2, 1);
+
+-- Registro 2
+INSERT INTO registroVehiculo (placa, fechaRegistro, horaRegistro, precio, idUsuario, idTipoVehiculo, idFactura)
+VALUES ('XYZ789', '2023-12-15', '14:45:00', 18000.00, 2, 2, 1);
+
+-- Registro 3
+INSERT INTO registroVehiculo (placa, fechaRegistro, horaRegistro, precio, idUsuario, idTipoVehiculo, idFactura)
+VALUES ('DEF456', '2023-12-16', '09:30:00', 20000.00, 2, 1, 1);
+
+-- Registro 4
+INSERT INTO registroVehiculo (placa, fechaRegistro, horaRegistro, precio, idUsuario, idTipoVehiculo, idFactura)
+VALUES ('GHI789', '2023-12-17', '11:15:00', 22000.00, 2, 2, 1);
+
+-- Registro 5
+INSERT INTO registroVehiculo (placa, fechaRegistro, horaRegistro, precio, idUsuario, idTipoVehiculo, idFactura)
+VALUES ('JKL012', '2023-12-18', '13:00:00', 25000.00, 2, 3, 1);
+
+
+SELECT * FROM tiposvehiculos
